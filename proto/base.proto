@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package texasholdem;
+
+enum Rank {
+    TWO = 0;
+    THREE = 1;
+    FOUR = 2;
+    FIVE = 3;
+    SIX = 4;
+    SEVEN = 5;
+    EIGHT = 6;
+    NINE = 7;
+    TEN = 8;
+    JACK = 9;
+    QUEEN = 10;
+    KING = 11;
+    ACE = 12;
+}
+
+enum Suit {
+    SPADE = 0;
+    HEART = 1;
+    CLUB = 2;
+    DIAMOND = 3;
+}
+
+message Card {
+    Rank rank = 1;
+    Suit suit = 2;
+}
+
+message Deck {
+    repeated Card cards = 1;
+}
+
+message HoleCards {
+    repeated Card cards = 1;
+}
+
+message CommunityCards {
+    repeated Card cards = 1;
+}
+
+message FlopCards {
+    repeated Card cards = 1;
+}
+
+message TurnCard {
+    Card card = 1;
+}
+
+message RiverCard {
+    Card card = 1;
+}
+
+message Hand {
+    repeated Card cards = 1;
+}
+
+enum HandValue {
+    HIGH_CARD = 0;
+    PAIR = 1;
+    TWO_PAIRS = 2;
+    THREE_OF_A_KIND = 3;
+    STRAIGHT = 4;
+    FLUSH = 5;
+    FULL_HOUSE = 6;
+    FOUR_OF_A_KIND = 7;
+    STRAIGHT_FLUSH = 8;
+    ROYAL_FLUSH = 9;
+}
+
+message HighCardScore {
+    Rank highestCard = 1;
+    Rank secondHighCard = 2;
+    Rank thirdHighCard = 3;
+    Rank forthHighCard = 4;
+    Rank fifthHighCard = 5;
+}
+
+message PairScore {
+    Rank pair = 1;
+    Rank highestCard = 2;
+    Rank secondHighCard = 3;
+    Rank thirdHighCard = 4;
+}
+
+message TwoPairsScore {
+    Rank higherPair = 1;
+    Rank secondHighPair = 2;
+    Rank highestCard = 3;
+    Rank secondHighCard = 4;
+}
+
+message ThreeOfAKindScore {
+    Rank set = 1;
+    Rank highestCard = 2;
+    Rank secondHighCard = 3;
+}
+
+message StraightScore {
+    Rank highest = 1;
+}
+
+message FlushScore {
+    Rank highest = 1;
+}
+
+message FullHouseScore {
+    Rank set = 1;
+    Rank pair = 2;
+}
+
+message FourOfAKindScore {
+    Rank four = 1;
+    Rank highCard = 2;
+}
+
+message StraightFlushScore {
+    Rank highest = 1;
+}
+
+message RoyalFlushScore {
+}
+
+message Score {
+    oneof score {
+        HighCardScore highCardScore = 1;
+        PairScore pairScore = 2;
+        TwoPairsScore twoPairsScore = 3;
+        ThreeOfAKindScore threeOfAKindScore = 4;
+        StraightScore straightScore = 5;
+        FlushScore flushScore = 6;
+        FullHouseScore fullHouseScore = 7;
+        FourOfAKindScore fourOfAKindScore = 8;
+        StraightFlushScore straightFlushScore = 9;
+        RoyalFlushScore royalFlushScore = 10;
+    }
+}
+
+enum BetPhase {
+    PRE_FLOP = 0;
+    FLOP = 1;
+    TURN = 2;
+    RIVER = 3;
+}
