@@ -9,6 +9,7 @@ import (
 
 var SuitChar = []rune("?♠♥♣♦")
 var RankChar = []rune("?23456789TJQKA")
+
 func CardToString(card *texasholdem.Card) string {
 	return fmt.Sprintf("%s%s", string(SuitChar[int(card.GetSuit())]), string(RankChar[int(card.GetRank())]))
 }
@@ -59,6 +60,7 @@ func AbbrsToCards(abbrs []string) *texasholdem.Cards {
 
 const RawRankChar = " 23456789tjqka"
 const RawSuitChar = " shcd"
+
 func init() {
 	AbbrToRankMap = make(map[uint8]texasholdem.Rank)
 	for i := 0; i < len(RawRankChar); i++ {

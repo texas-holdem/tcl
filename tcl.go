@@ -22,26 +22,26 @@ func computeStraightFlushScore(hand *texasholdem.Cards) *texasholdem.Score {
 	}
 	return &texasholdem.Score{
 		Category: texasholdem.Score_STRAIGHT_FLUSH,
-		Kicker1: hand.GetCards()[4].GetRank(),
+		Kicker1:  hand.GetCards()[4].GetRank(),
 	}
 }
 
 func computeFourOfAKindScore(hand *texasholdem.Cards) *texasholdem.Score {
 	cards := hand.GetCards()
-	rank :=cards[1].GetRank()
+	rank := cards[1].GetRank()
 	if rank == cards[2].GetRank() &&
-	   rank == cards[3].GetRank() {
+		rank == cards[3].GetRank() {
 		if rank == cards[0].GetRank() {
 			return &texasholdem.Score{
 				Category: texasholdem.Score_FOUR_OF_A_KIND,
-				Kicker1: rank,
-				Kicker2: cards[4].GetRank(),
+				Kicker1:  rank,
+				Kicker2:  cards[4].GetRank(),
 			}
 		} else if rank == cards[4].GetRank() {
 			return &texasholdem.Score{
 				Category: texasholdem.Score_FOUR_OF_A_KIND,
-				Kicker1: rank,
-				Kicker2: cards[0].GetRank(),
+				Kicker1:  rank,
+				Kicker2:  cards[0].GetRank(),
 			}
 		}
 	}
@@ -55,14 +55,14 @@ func computeFullHouseScore(hand *texasholdem.Cards) *texasholdem.Score {
 		if cards[1].GetRank() == cards[2].GetRank() {
 			return &texasholdem.Score{
 				Category: texasholdem.Score_FULL_HOUSE,
-				Kicker1: cards[0].GetRank(),
-				Kicker2: cards[3].GetRank(),
+				Kicker1:  cards[0].GetRank(),
+				Kicker2:  cards[3].GetRank(),
 			}
 		} else if cards[2].GetRank() == cards[3].GetRank() {
 			return &texasholdem.Score{
 				Category: texasholdem.Score_FULL_HOUSE,
-				Kicker1: cards[2].GetRank(),
-				Kicker2: cards[0].GetRank(),
+				Kicker1:  cards[2].GetRank(),
+				Kicker2:  cards[0].GetRank(),
 			}
 		}
 	}
@@ -78,15 +78,16 @@ func computeFlushScore(hand *texasholdem.Cards) *texasholdem.Score {
 	}
 	return &texasholdem.Score{
 		Category: texasholdem.Score_FLUSH,
-		Kicker1: hand.GetCards()[4].GetRank(),
+		Kicker1:  hand.GetCards()[4].GetRank(),
 	}
 }
 
 var StraightSpecialCase = []texasholdem.Rank{texasholdem.Rank_TWO,
-											   texasholdem.Rank_THREE,
-											   texasholdem.Rank_FOUR,
-											   texasholdem.Rank_FIVE,
-											   texasholdem.Rank_ACE}
+	texasholdem.Rank_THREE,
+	texasholdem.Rank_FOUR,
+	texasholdem.Rank_FIVE,
+	texasholdem.Rank_ACE}
+
 func computeStraightScore(hand *texasholdem.Cards) *texasholdem.Score {
 	cards := hand.GetCards()
 	isSpecialCase := true
@@ -104,13 +105,13 @@ func computeStraightScore(hand *texasholdem.Cards) *texasholdem.Score {
 	rank := cards[0].GetRank()
 	for i := 1; i < 5; i++ {
 		currentRank := cards[i].GetRank()
-		if int(currentRank) != int(rank) + i {
+		if int(currentRank) != int(rank)+i {
 			return nil
 		}
 	}
 	return &texasholdem.Score{
 		Category: texasholdem.Score_STRAIGHT,
-		Kicker1: cards[4].GetRank(),
+		Kicker1:  cards[4].GetRank(),
 	}
 }
 
@@ -120,25 +121,25 @@ func computeThreeOfAKindScore(hand *texasholdem.Cards) *texasholdem.Score {
 		cards[1].GetRank() == cards[2].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_THREE_OF_A_KIND,
-			Kicker1: cards[0].GetRank(),
-			Kicker2: cards[4].GetRank(),
-			Kicker3: cards[3].GetRank(),
+			Kicker1:  cards[0].GetRank(),
+			Kicker2:  cards[4].GetRank(),
+			Kicker3:  cards[3].GetRank(),
 		}
 	} else if cards[1].GetRank() == cards[2].GetRank() &&
 		cards[2].GetRank() == cards[3].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_THREE_OF_A_KIND,
-			Kicker1: cards[1].GetRank(),
-			Kicker2: cards[4].GetRank(),
-			Kicker3: cards[0].GetRank(),
+			Kicker1:  cards[1].GetRank(),
+			Kicker2:  cards[4].GetRank(),
+			Kicker3:  cards[0].GetRank(),
 		}
 	} else if cards[2].GetRank() == cards[3].GetRank() &&
 		cards[3].GetRank() == cards[4].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_THREE_OF_A_KIND,
-			Kicker1: cards[2].GetRank(),
-			Kicker2: cards[1].GetRank(),
-			Kicker3: cards[0].GetRank(),
+			Kicker1:  cards[2].GetRank(),
+			Kicker2:  cards[1].GetRank(),
+			Kicker3:  cards[0].GetRank(),
 		}
 	}
 	return nil
@@ -150,25 +151,25 @@ func computeTwoPairsScore(hand *texasholdem.Cards) *texasholdem.Score {
 		cards[2].GetRank() == cards[3].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_TWO_PAIRS,
-			Kicker1: cards[2].GetRank(),
-			Kicker2: cards[0].GetRank(),
-			Kicker3: cards[4].GetRank(),
+			Kicker1:  cards[2].GetRank(),
+			Kicker2:  cards[0].GetRank(),
+			Kicker3:  cards[4].GetRank(),
 		}
 	} else if cards[0].GetRank() == cards[1].GetRank() &&
 		cards[3].GetRank() == cards[4].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_TWO_PAIRS,
-			Kicker1: cards[3].GetRank(),
-			Kicker2: cards[0].GetRank(),
-			Kicker3: cards[2].GetRank(),
+			Kicker1:  cards[3].GetRank(),
+			Kicker2:  cards[0].GetRank(),
+			Kicker3:  cards[2].GetRank(),
 		}
 	} else if cards[1].GetRank() == cards[2].GetRank() &&
 		cards[3].GetRank() == cards[4].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_TWO_PAIRS,
-			Kicker1: cards[3].GetRank(),
-			Kicker2: cards[1].GetRank(),
-			Kicker3: cards[0].GetRank(),
+			Kicker1:  cards[3].GetRank(),
+			Kicker2:  cards[1].GetRank(),
+			Kicker3:  cards[0].GetRank(),
 		}
 	}
 	return nil
@@ -179,35 +180,35 @@ func computePairScore(hand *texasholdem.Cards) *texasholdem.Score {
 	if cards[0].GetRank() == cards[1].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_PAIR,
-			Kicker1: cards[0].GetRank(),
-			Kicker2: cards[4].GetRank(),
-			Kicker3: cards[3].GetRank(),
-			Kicker4: cards[2].GetRank(),
+			Kicker1:  cards[0].GetRank(),
+			Kicker2:  cards[4].GetRank(),
+			Kicker3:  cards[3].GetRank(),
+			Kicker4:  cards[2].GetRank(),
 		}
 	} else if cards[1].GetRank() == cards[2].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_PAIR,
-			Kicker1: cards[1].GetRank(),
-			Kicker2: cards[4].GetRank(),
-			Kicker3: cards[3].GetRank(),
-			Kicker4: cards[0].GetRank(),
+			Kicker1:  cards[1].GetRank(),
+			Kicker2:  cards[4].GetRank(),
+			Kicker3:  cards[3].GetRank(),
+			Kicker4:  cards[0].GetRank(),
 		}
 	} else if cards[2].GetRank() == cards[3].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_PAIR,
-			Kicker1: cards[2].GetRank(),
-			Kicker2: cards[4].GetRank(),
-			Kicker3: cards[1].GetRank(),
-			Kicker4: cards[0].GetRank(),
+			Kicker1:  cards[2].GetRank(),
+			Kicker2:  cards[4].GetRank(),
+			Kicker3:  cards[1].GetRank(),
+			Kicker4:  cards[0].GetRank(),
 		}
 	}
 	if cards[3].GetRank() == cards[4].GetRank() {
 		return &texasholdem.Score{
 			Category: texasholdem.Score_PAIR,
-			Kicker1: cards[3].GetRank(),
-			Kicker2: cards[2].GetRank(),
-			Kicker3: cards[1].GetRank(),
-			Kicker4: cards[0].GetRank(),
+			Kicker1:  cards[3].GetRank(),
+			Kicker2:  cards[2].GetRank(),
+			Kicker3:  cards[1].GetRank(),
+			Kicker4:  cards[0].GetRank(),
 		}
 	}
 	return nil
@@ -217,11 +218,11 @@ func computeHighCardScore(hand *texasholdem.Cards) *texasholdem.Score {
 	cards := hand.GetCards()
 	return &texasholdem.Score{
 		Category: texasholdem.Score_HIGH_CARD,
-		Kicker1: cards[4].GetRank(),
-		Kicker2: cards[3].GetRank(),
-		Kicker3: cards[2].GetRank(),
-		Kicker4: cards[1].GetRank(),
-		Kicker5: cards[0].GetRank(),
+		Kicker1:  cards[4].GetRank(),
+		Kicker2:  cards[3].GetRank(),
+		Kicker3:  cards[2].GetRank(),
+		Kicker4:  cards[1].GetRank(),
+		Kicker5:  cards[0].GetRank(),
 	}
 }
 
