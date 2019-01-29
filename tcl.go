@@ -5,6 +5,19 @@ import (
 	"github.com/texas-holdem/tcl/proto"
 )
 
+var FullDeck []*texasholdem.Card
+func GetShuffledDeck() *texasholdem.Cards {
+	cards := make([]*texasholdem.Card, len(FullDeck))
+	copy(cards, FullDeck)
+	for i := range cards {
+		j := Intn(i + 1)
+		cards[i], cards[j] = cards[j], cards[i]
+	}
+	return &texasholdem.Cards{
+		Cards: cards,
+	}
+}
+
 func computeRoyalFlushScore(hand *texasholdem.Cards) *texasholdem.Score {
 	if straightFlushScore := computeStraightFlushScore(hand); nil != straightFlushScore &&
 		straightFlushScore.GetKicker1() == texasholdem.Rank_ACE {
@@ -230,46 +243,37 @@ func ComputeScore(hand *texasholdem.Cards) (*texasholdem.Score, error) {
 	if nil == hand || 5 != len(hand.GetCards()) {
 		return nil, errors.New("invalid hand")
 	}
+	computers := []func(cards *texasholdem.Cards)*texasholdem.Score{
+		computeRoyalFlushScore,
+		computeStraightFlushScore,
+		computeFourOfAKindScore,
+		computeFullHouseScore,
+		computeFlushScore,
+		computeStraightScore,
+		computeThreeOfAKindScore,
+		computeTwoPairsScore,
+		computePairScore,
+		computeHighCardScore,
+	}
 	hand = SortedCards(hand)
-	score := computeRoyalFlushScore(hand)
-	if nil != score {
-		return score, nil
+	for _, computer := range computers {
+		if score := computer(hand); nil != score {
+			return score, nil
+		}
 	}
-	score = computeRoyalFlushScore(hand)
-	if nil != score {
-		return score, nil
+	panic("should not reach")
+}
+
+func init() {
+	FullDeck = make([]*texasholdem.Card, 52)
+	idx := 0
+	for rank := texasholdem.Rank_TWO; rank <= texasholdem.Rank_ACE; rank++ {
+		for suit := texasholdem.Suit_SPADE; suit <= texasholdem.Suit_DIAMOND; suit++ {
+			FullDeck[idx] = &texasholdem.Card{
+				Rank: rank,
+				Suit: suit,
+			}
+			idx++
+		}
 	}
-	score = computeStraightFlushScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeFourOfAKindScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeFullHouseScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeFlushScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeStraightScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeThreeOfAKindScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computeTwoPairsScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	score = computePairScore(hand)
-	if nil != score {
-		return score, nil
-	}
-	return computeHighCardScore(hand), nil
 }

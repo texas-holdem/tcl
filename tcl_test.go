@@ -3,6 +3,7 @@ package tcl
 import (
 	"github.com/golang/protobuf/proto"
 	"github.com/texas-holdem/tcl/proto"
+	"math"
 	"testing"
 )
 
@@ -81,6 +82,37 @@ func TestComputeTypicalScores(t *testing.T) {
 		if !proto.Equal(actual, expected[i]) {
 			t.Errorf("expected: %s actual: %s", proto.MarshalTextString(expected[i]), proto.MarshalTextString(actual))
 			t.Errorf("cards: %s", CardsDebugString(testCases[i]))
+		}
+	}
+}
+
+func TestGetShuffledDeck(t *testing.T) {
+	n := 10000
+	rankSums := make([]int, 52)
+	suitSums := make([]int, 52)
+	for i := 0; i < n; i++ {
+		cards := GetShuffledDeck()
+		for j, card := range cards.GetCards() {
+			rankSums[j] += int(card.GetRank())
+			suitSums[j] += int(card.GetSuit())
+		}
+	}
+	expectedRankSum := int(texasholdem.Rank_TWO + texasholdem.Rank_ACE) * n / 2
+	allowedDelta := int(texasholdem.Rank_TWO + texasholdem.Rank_ACE) * int(math.Floor(math.Sqrt(float64(n))))
+	rankSumMin := expectedRankSum - allowedDelta
+	rankSumMax := expectedRankSum + allowedDelta
+	for i := 0; i < 52; i++ {
+		if rankSums[i] < rankSumMin || rankSums[i] > rankSumMax {
+			t.Errorf("not random enough? rankSums[%d] = %d", i, rankSums[i])
+		}
+	}
+	expectedSuitSum := int(texasholdem.Suit_SPADE + texasholdem.Suit_DIAMOND) * n / 2
+	allowedDelta = int(texasholdem.Suit_SPADE + texasholdem.Suit_DIAMOND) * int(math.Floor(math.Sqrt(float64(n))))
+	suitSumMin := expectedSuitSum - allowedDelta
+	suitSumMax := expectedSuitSum + allowedDelta
+	for i := 0; i < 52; i++ {
+		if suitSums[i] < suitSumMin || suitSums[i] > suitSumMax {
+			t.Errorf("not random enough? suitSums[%d] = %d", i, suitSums[i])
 		}
 	}
 }
