@@ -32,10 +32,6 @@ message Card {
     Suit suit = 2;
 }
 
-message Cards {
-    repeated Card cards =1;
-}
-
 message Score {
 
     enum Category {
@@ -53,9 +49,5 @@ message Score {
     }
 
     Category category = 1;
-    Rank kicker1 = 2;
-    Rank kicker2 = 3;
-    Rank kicker3 = 4;
-    Rank kicker4 = 5;
-    Rank kicker5 = 6;
+    repeated Rank kicker = 2;
 }

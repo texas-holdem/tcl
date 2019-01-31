@@ -8,7 +8,7 @@ import (
 )
 
 func TestComputeTypicalScores(t *testing.T) {
-	testCases := []*texasholdem.Cards{
+	testCases := [][]*texasholdem.Card{
 		AbbrsToCards([]string{"th", "jh", "qh", "kh", "ah"}), // royal flush
 		AbbrsToCards([]string{"th", "jh", "qh", "kh", "9h"}), // straight flush
 		AbbrsToCards([]string{"ts", "th", "tc", "td", "ah"}), // four of a kind
@@ -26,52 +26,70 @@ func TestComputeTypicalScores(t *testing.T) {
 		},
 		{
 			Category: texasholdem.Score_STRAIGHT_FLUSH,
-			Kicker1:  texasholdem.Rank_KING,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_KING,
+			},
 		},
 		{
 			Category: texasholdem.Score_FOUR_OF_A_KIND,
-			Kicker1:  texasholdem.Rank_TEN,
-			Kicker2:  texasholdem.Rank_ACE,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_ACE,
+			},
 		},
 		{
 			Category: texasholdem.Score_FULL_HOUSE,
-			Kicker1:  texasholdem.Rank_TEN,
-			Kicker2:  texasholdem.Rank_KING,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_KING,
+			},
 		},
 		{
 			Category: texasholdem.Score_FLUSH,
-			Kicker1:  texasholdem.Rank_TEN,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+			},
 		},
 		{
 			Category: texasholdem.Score_STRAIGHT,
-			Kicker1:  texasholdem.Rank_TEN,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+			},
 		},
 		{
 			Category: texasholdem.Score_THREE_OF_A_KIND,
-			Kicker1:  texasholdem.Rank_TWO,
-			Kicker2:  texasholdem.Rank_TEN,
-			Kicker3:  texasholdem.Rank_FOUR,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TWO,
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_FOUR,
+			},
 		},
 		{
 			Category: texasholdem.Score_TWO_PAIRS,
-			Kicker1:  texasholdem.Rank_TEN,
-			Kicker2:  texasholdem.Rank_TWO,
-			Kicker3:  texasholdem.Rank_EIGHT,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_TWO,
+				texasholdem.Rank_EIGHT,
+			},
 		},
 		{
 			Category: texasholdem.Score_PAIR,
-			Kicker1:  texasholdem.Rank_TWO,
-			Kicker2:  texasholdem.Rank_TEN,
-			Kicker3:  texasholdem.Rank_SIX,
-			Kicker4:  texasholdem.Rank_FOUR,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TWO,
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_SIX,
+				texasholdem.Rank_FOUR,
+			},
 		},
 		{
 			Category: texasholdem.Score_HIGH_CARD,
-			Kicker1:  texasholdem.Rank_TEN,
-			Kicker2:  texasholdem.Rank_EIGHT,
-			Kicker3:  texasholdem.Rank_SIX,
-			Kicker4:  texasholdem.Rank_FOUR,
-			Kicker5:  texasholdem.Rank_TWO,
+			Kicker: []texasholdem.Rank{
+				texasholdem.Rank_TEN,
+				texasholdem.Rank_EIGHT,
+				texasholdem.Rank_SIX,
+				texasholdem.Rank_FOUR,
+				texasholdem.Rank_TWO,
+			},
 		},
 	}
 	for i := 0; i < len(testCases); i++ {
@@ -92,7 +110,7 @@ func TestGetShuffledDeck(t *testing.T) {
 	suitSums := make([]int, 52)
 	for i := 0; i < n; i++ {
 		cards := GetShuffledDeck()
-		for j, card := range cards.GetCards() {
+		for j, card := range cards {
 			rankSums[j] += int(card.GetRank())
 			suitSums[j] += int(card.GetSuit())
 		}

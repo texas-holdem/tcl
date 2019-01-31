@@ -14,23 +14,21 @@ func CardToString(card *texasholdem.Card) string {
 	return fmt.Sprintf("%s%s", string(SuitChar[int(card.GetSuit())]), string(RankChar[int(card.GetRank())]))
 }
 
-func CardsDebugString(cards *texasholdem.Cards) string {
-	cardStrings := make([]string, len(cards.GetCards()))
-	for i, card := range cards.GetCards() {
+func CardsDebugString(cards []*texasholdem.Card) string {
+	cardStrings := make([]string, len(cards))
+	for i, card := range cards {
 		cardStrings[i] = CardToString(card)
 	}
 	return fmt.Sprintf("[%s]", strings.Join(cardStrings, ", "))
 }
 
-func SortedCards(hand *texasholdem.Cards) *texasholdem.Cards {
-	cards := make([]*texasholdem.Card, len(hand.GetCards()))
-	copy(cards, hand.GetCards())
+func SortedCards(hand []*texasholdem.Card) []*texasholdem.Card {
+	cards := make([]*texasholdem.Card, len(hand))
+	copy(cards, hand)
 	sort.Slice(cards, func(i, j int) bool {
 		return cards[i].GetRank() < cards[j].GetRank()
 	})
-	return &texasholdem.Cards{
-		Cards: cards,
-	}
+	return cards
 }
 
 var AbbrToRankMap map[uint8]texasholdem.Rank
@@ -48,14 +46,28 @@ func AbbrToCard(abbr string) *texasholdem.Card {
 	}
 }
 
-func AbbrsToCards(abbrs []string) *texasholdem.Cards {
+func AbbrsToCards(abbrs []string) []*texasholdem.Card {
 	cards := make([]*texasholdem.Card, len(abbrs))
 	for i := 0; i < len(abbrs); i++ {
 		cards[i] = AbbrToCard(abbrs[i])
 	}
-	return &texasholdem.Cards{
-		Cards: cards,
+	return cards
+}
+
+func compareScore(score1, score2 *texasholdem.Score) int {
+	if score1.GetCategory() < score2.GetCategory() {
+		return -1
+	} else if score1.GetCategory() > score2.GetCategory() {
+		return 1
 	}
+	for i := range score1.GetKicker() {
+		if score1.GetKicker()[i] < score2.GetKicker()[i] {
+			return -1
+		} else if score1.GetKicker()[i] > score2.GetKicker()[i] {
+			return 1
+		}
+	}
+	return 0
 }
 
 const RawRankChar = " 23456789tjqka"
